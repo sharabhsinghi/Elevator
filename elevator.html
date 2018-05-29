@@ -1,0 +1,47 @@
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+<script>
+var l1 = [1,4,2,8,7,9]
+
+$(document).ready(function() {
+
+function loop() {
+    var n = l1.shift() * 100;
+    var h = n+"px";
+    if(l1.length > 0){
+        $('#box').animate ({
+            top: h,
+        }, 2000, 'swing', function() {
+            loop();
+        });
+    }
+}
+    
+loop();
+});
+
+</script>
+<style>
+
+#box{
+    background:#98bf21;
+    height:100px;
+    position: absolute;
+    top: 1px;
+    width:100px;
+    margin:6px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="box"></div>
+
+</body>
+</html>
