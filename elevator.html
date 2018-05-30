@@ -6,23 +6,93 @@
   crossorigin="anonymous"></script>
 
 <script>
-var l1 = [1,4,2,8,7,9]
+var l1 = [1,4,2,8,7,9];
+var l2 = [];
+var ele_object;
 
-$(document).ready(function() {
+function get_eles(){
+    ele_object = {
+        "e1" : {
+            "cur_f" : 0,
+            "direction" : 1
+        },
+        "e2" : {
+            "cur_f" : 10,
+            "direction" : -1
+        },
+    }
+}
 
-function loop() {
-    var n = l1.shift() * 100;
-    var h = n+"px";
+function temp_api(ob,ff,tf){
+    return "e1";
+}
+
+function update_eles(){
+    var ff=document.getElementById("ff").value;
+    var tf=document.getElementById("tf").value;
+    var pu = temp_api(ele_object,ff,tf);
+    var tl;
+    if(pu == "e1"){
+        tl = l1;
+    }
+    else if(pu == "e2"){
+        tl = l2;
+    }
+    tl.push(parseInt(ff));
+    tl.push(parseInt(tf));
+    if(ele_object[pu]["direction"] == 1){
+        tl.sort();
+    }
+    else{
+        tl.sort(function(a, b){return b-a});
+    }
+
+    loop1();
+}
+
+function loop1() {
     if(l1.length > 0){
+        var cur_f = ele_object["e1"]["cur_f"];
+        var n = l1.shift();
+        var n1 = n * 8.9;
+        var h = n1+"%";
+        var dir;
+        if(cur_f > n){
+            dir = 1;
+        }
+        else if(cur_f < n){
+            dir = -1;
+        }
+        else{
+            dir = 0;
+        }
+        ele_object["e1"]["direction"] = dir;
         $('#box').animate ({
-            top: h,
-        }, 2000, 'swing', function() {
-            loop();
+            bottom: h,
+        }, 3000, 'swing', function() {
+            ele_object["e1"]["cur_f"] = n;
+            $("#box").text("Floor: "+n);
+            loop1();
         });
     }
 }
-    
-loop();
+
+function add_st(){
+        var buin = "";
+        var bbin = "";
+        var bubot;
+        for(var i=0;i<11;i++){
+            bubot = i*8.9;
+            bbin = "<span style='bottom:" + bubot + "%'>-------------------------<b>"+i+"</b></span>";
+            buin = buin.concat(bbin);
+        }
+        document.getElementById("story-wrap").innerHTML=buin;
+    } 
+
+$(document).ready(function() {
+    add_st();
+    get_eles();
+    loop1();
 });
 
 </script>
@@ -30,18 +100,37 @@ loop();
 
 #box{
     background:#98bf21;
-    height:100px;
+    height:9%;
     position: absolute;
-    top: 1px;
+    bottom: 0px;
     width:100px;
     margin:6px;
+    text-align: center;
+}
+#story-wrap{
+    position: absolute;
+    left: 120px;
+    width: 250px;
+    height: 100%;
+}
+
+#story-wrap span{
+    position:absolute;
+}
+#story-wrap span b{
+    font-size: 30px;
 }
 
 </style>
 </head>
 <body>
 
-<div id="box"></div>
-
+<div id="box">Floor 0</div>
+<div id="story-wrap"></div>
+<div id="getval" style="position: absolute;right: 100px; width:90px;">
+    <input type="text" id="ff" placeholder="From"/>
+    <input type="text" id="tf" placeholder="To"/>
+    <input type="button" id="call" onclick="update_eles()" value="call elevator"/>
+</div>
 </body>
 </html>
